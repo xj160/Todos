@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue 测试实例 - 菜鸟教程(runoob.com)</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.min.js"></script>
+<style type="text/css">
+	*{
+		margin: 0;
+		padding: 0;
+	}
+	body{
+		background: #f5f5f5;
+		min-width: 230px;
+    	max-width: 594px;
+		margin: 0 auto;
+		font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	}
+	#app{
+		/*line-height: 200px;*/
+		position: relative;
+	}
+	header h1{
+		width: 100%;
+	    font-size: 100px;
+	    font-weight: 100;
+	    text-align: center;
+	    color: rgba(175, 47, 47, 0.15);
+		text-rendering: optimizeLegibility;
+	}
+	main{
+		margin-top: 5px;
+		background: #fff;
+		box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+	}
+	.new-todo{
+		width: 100%;
+		padding: 16px 60px 16px 60px;
+	    border: none;
+	    background: rgba(0, 0, 0, 0.003);
+	    box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
+	    font-size: 24px;
+	    font-family: inherit;
+	    font-weight: inherit;
+	    line-height: 1.4em;
+	    color: #4d4d4d;
+	    box-sizing: border-box;
+	    -webkit-font-smoothing: antialiased;
+	}
+	input:focus{
+		outline: none;
+	}
+	.show-todos{	
+	    position: absolute;
+	    padding:19.8px 15px;
+	    right: 0;
+	}
+	.toggle-all{
+		 position: absolute;
+	}
+	.todo-list {
+    	list-style: none;
+	}
+	.todo-list li {
+	    position: relative;
+	    font-size: 24px;
+	    border-bottom: 1px solid #ededed;
+	}
+	.toggle-all input,.todo-list li .toggle {
+	    text-align: center;
+	    width: 40px;
+	    height:40px;
+	    
+	    border: none;
+	    -webkit-appearance: none;
+	    appearance: none;
+	}
+	.todo-list li .toggle{
+		position: absolute;
+	    top: 0;
+	    bottom: 0;
+	    margin: auto 0;
+	}
+	.toggle-all{
+		    padding-top: 11px;
+		/*display: inline-block;*/
+	}
+	.toggle-all input,.todo-list li .toggle + label {
+	    background-image: url(data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23ededed%22%20stroke-width%3D%223%22/%3E%3C/svg%3E);
+	    background-repeat: no-repeat;
+	    background-position: center left;
+	}
+	.toggle-all input:checked,.todo-list li .toggle:checked + label {
+	    background-image: url(data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23bddad5%22%20stroke-width%3D%223%22/%3E%3Cpath%20fill%3D%22%235dc2af%22%20d%3D%22M72%2025L42%2071%2027%2056l-4%204%2020%2020%2034-52z%22/%3E%3C/svg%3E);
+	}							
+	.todo-list li label {
+	    word-break: break-all;
+	    padding: 15px 15px 15px 60px;
+	    display: block;
+	    line-height: 1.2;
+	    transition: color 0.4s;
+	}
+	button {
+	    margin: 0;
+	    padding: 0;
+	    border: 0;
+	    background: none;
+	    font-size: 100%;
+	    vertical-align: baseline;
+	    font-family: inherit;
+	    font-weight: inherit;
+	    color: inherit;
+	    -webkit-appearance: none;
+	    appearance: none;
+	    -webkit-font-smoothing: antialiased;
+	    -moz-osx-font-smoothing: grayscale;
+	}
+	.todo-list li .destroy {
+	    display: none;
+	    position: absolute;
+	    top: 0;
+	    right: 10px;
+	    bottom: 0;
+	    width: 40px;
+	    height: 40px;
+	    margin: auto 0;
+	    font-size: 30px;
+	    color: #cc9a9a;
+	    margin-bottom: 11px;
+	    transition: color 0.2s ease-out;
+	}
+	.todo-list li .edit {
+    	display: none;
+	}
+	.edit {
+	    position: relative;
+	    margin: 0;
+	    width: 100%;
+	    font-size: 24px;
+	    font-family: inherit;
+	    font-weight: inherit;
+	    line-height: 1.4em;
+	    border: 0;
+	    color: inherit;
+	    padding: 6px;
+	    border: 1px solid #999;
+	    box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+	    box-sizing: border-box;
+	    -webkit-font-smoothing: antialiased;
+	    -moz-osx-font-smoothing: grayscale;
+	}
+	.todo-list li .destroy:after {
+    	content: '×';
+	}
+	.footer {
+	    color: #777;
+	    padding: 10px 15px;
+	    height: 20px;
+	    text-align: center;
+	    border-top: 1px solid #e6e6e6;
+	}	
+	.footer:before {
+	    content: '';
+	    position: absolute;
+	    right: 0;
+	    bottom: 0;
+	    left: 0;
+	    height: 50px;
+	    overflow: hidden;
+	    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6, 0 9px 1px -3px rgba(0, 0, 0, 0.2), 0 16px 0 -6px #f6f6f6, 0 17px 2px -6px rgba(0, 0, 0, 0.2);
+	}
+	.todo-count {
+	    float: left;
+	    text-align: left;
+	}
+	.todo-count strong {
+	    font-weight: 300;
+	}
+	.filters {
+	    margin: 0;
+	    padding: 0;
+	    list-style: none;
+	    position: absolute;
+	    right: 0;
+	    left: 0;
+	}
+	.filters li {
+	    display: inline;
+	}
+	.filters li a.selected {
+	    border-color: rgba(175, 47, 47, 0.2);
+	}
+	.filters li a {
+	    color: inherit;
+	    margin: 3px;
+	    padding: 3px 7px;
+	    text-decoration: none;
+	    border: 1px solid transparent;
+	    border-radius: 3px;
+	}
+	.clear-completed, html .clear-completed:active {
+	    float: right;
+	    position: relative;
+	    line-height: 20px;
+	    text-decoration: none;
+	    cursor: pointer;
+	}
+	.todo-list li.editing .edit {
+		display: block;
+		width: calc(100% - 43px);
+		padding: 12px 16px;
+		margin: 0 0 0 43px;
+	}
+	.todo-list li.editing .view{
+		display: none;
+	}
+	.todo-list li:hover .destroy {
+	    display: block;
+	}
+	.todo-list li.completed label {
+	    color: #d9d9d9;
+	    text-decoration: line-through;
+	}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+  	<h1>todos</h1>
+  </header>
+  <main>
+  	<div>
+  		<span class="toggle-all" v-show="todos.length != 0">
+  			<input type="checkbox" v-model="allDone" >
+  		</span>
+  		<span v-show="todos.length != 0">
+  			<i class="show-todos" @click="showAll()">
+  				<svg v-if="todosShow"  t="1590400409157" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1335" width="22" height="22"><path d="M511.609097 961.619254" p-id="1336" fill="#e6e6e6"></path><path d="M511.906879 662.759609 511.906879 662.759609 129.831974 280.679587c-14.788821-14.762215-38.777165-14.762215-53.585429 0-14.788821 14.812357-14.788821 38.799678 0 53.607942l405.851425 405.805376c0.867764 1.107217 1.824555 2.190899 2.843768 3.206018 14.808264 14.788821 38.795585 14.788821 53.585429 0l408.230612-408.226518c14.807241-14.808264 14.807241-38.795585 0-53.584406-14.767332-14.785751-38.754652-14.785751-53.562916 0L511.906879 662.759609 511.906879 662.759609zM511.906879 662.759609" p-id="1337" fill="#e6e6e6"></path></svg>
+
+  				<svg v-else style="transform: rotate(180deg);" t="1590401565017" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1558" width="22" height="22"><path d="M511.609097 961.619254" p-id="1559" fill="#e6e6e6"></path><path d="M662.268422 511.010463 280.997835 892.299469c-14.785751 14.808264-14.785751 38.796608 0 53.562916 14.788821 14.807241 38.776142 14.807241 53.584406 0l408.226518-408.230612c14.789844-14.790868 14.789844-38.777165 0-53.585429-1.01512-1.020236-2.099824-1.976004-3.206018-2.843768L333.797365 75.350129c-14.808264-14.788821-38.795585-14.788821-53.607942 0-14.762215 14.808264-14.762215 38.796608 0 53.585429L662.268422 511.010463 662.268422 511.010463 662.268422 511.010463zM662.268422 511.010463" p-id="1560" fill="#e6e6e6"></path></svg>
+  			</i>
+  		</span>
+  		<input type="text" name="" class="new-todo" autofocus="autofocus" autocomplete="off" placeholder="What needs to be done?" @keyup.enter="addTodo" v-model="newTodo">
+  		<div v-show="todosShow" >
+	  		<ul class="todo-list">
+	  			<li class="todo" :class="{completed:todo.completed,editing:editId==todo.id}" v-for="todo in filteredTodo" :key="todo.id">
+	  				<div class="view">
+	  					<input type="checkbox" class="toggle" v-model="todo.completed">
+	  					<label @dblclick="editTodo(todo)">{{todo.value}}</label>
+	  					<button class="destroy" @click="removeTodo(todo)"></button>
+	  				</div>
+	  				<input type="text" class="edit" v-model="editTodoValue" @keyup.enter="modifyValue(todo)">
+	  			</li>
+
+	  		</ul>
+	  		<footer class="footer">
+	  			<span class="todo-count"><strong>{{ activeNum }}</strong> items left</span>
+	  			<ul class="filters">
+	  				<li><a @click="selected('all')" :class="{selected:visible=='all'}">All</a></li> 
+	  				<li><a @click="selected('active')" :class="{selected:visible=='active'}">Active</a></li> 
+	  				<li><a @click="selected('completed')" :class="{selected:visible=='completed'}">Completed</a></li>
+	  			</ul> 
+	  			<button class="clear-completed" v-show="activeNum < todos.length" @click="clearCompleted()"> Clear completed</button>
+	 		</footer>
+ 		</div>
+  	</div>
+  </main>
+</div>
+
+<script>
+	// Array.prototype.remove = (val)=> { 
+	// 	console.log(val,this)
+	// 	var index = this.indexof(val); 
+	// 	if (index > -1) { 
+	// 		this.splice(index, 1); 
+	// 	} 
+	// };
+	let STORAGE_KEY = "baiye.com";
+	let todoStorage = {
+		fetch() {
+          var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+          todos.forEach(function(todo, index) {
+            todo.id = index;
+          });
+          todoStorage.uid = todos.length;
+          return todos;
+        },
+        save(todos) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+        }
+	};
+	let filters={
+		all(todos){
+			return todos;
+		},
+		completed(todos){
+			return todos.filter(function(todo){
+				return todo.completed;
+			})
+		},
+		active(todos){
+			return todos.filter(function(todo){
+				return !todo.completed;
+			})
+		}
+	};
+	
+
+	let app = new Vue({
+		el:"#app",
+		data:{
+			todosShow:false,
+			todos:todoStorage.fetch(),
+			newTodo:'',
+			visible:'all',
+			editId: null,
+			editTodoValue:'',
+			allDone:false,
+			switch:true
+		},
+		watch:{
+          	todos: {
+	            handler(todos) {
+	              todoStorage.save(todos);
+
+	            },
+	            
+	            deep: true
+
+	        },
+	        allDone(newVal,oldVal){
+            	if( this.switch){
+            		if(newVal){
+	            		return filters.active(this.todos).forEach(function(todo){
+	            			todo.completed = true
+	            		})
+	            	}else{
+	            		return filters.completed(this.todos).forEach(function(todo){
+	            			todo.completed = false
+            			})
+            		}
+            	}else{
+            		this.switch = true
+            	}
+
+            },
+
+		},
+		computed:{
+			filteredTodo(){
+				return filters[this.visible](this.todos)
+			},
+			activeNum(){
+				return filters.active(this.todos).length;
+			}
+
+		},
+		methods:{
+			showAll(){
+				this.todosShow = !this.todosShow
+			},
+			addTodo(){
+				let value = this.newTodo && this.newTodo.trim();
+				if(!value){
+					return;
+				}
+				this.todos.push({
+					id: todoStorage.uid++,
+					value: value,
+					completed:false
+				})
+				this.newTodo = '';
+				this.todosShow = true;
+				if(this.allDone){
+					this.switch = false;
+					this.allDone = false;
+				}
+			},
+			removeTodo(todo){
+				this.todos.splice(this.todos.indexOf(todo), 1);
+				if(this.todos.length==0){
+					this.todosShow = false
+				}
+			},
+			selected(visible){
+				this.visible = visible;
+			},
+			editTodo(todo){
+				this.editId = todo.id;
+				this.editTodoValue = todo.value ;
+			},
+			modifyValue(todo){
+				if(this.editId != todo.id){
+					return;
+				} 
+				value = this.editTodoValue.trim()
+				if(value){
+					todo.value = value;
+				}
+				this.editTodoValue = '';
+				this.editId = null
+
+			},
+			clearCompleted(){
+				todos = this.todos
+				filters.completed(todos).forEach(function(todo){
+					todos.splice(todos.indexOf(todo), 1);
+				})
+				if(this.allDone){
+					this.switch = false;
+					this.allDone = false;
+				}
+			}
+
+		},
+		created(){
+			if(this.todos.length!=0){
+				this.todosShow = true
+			}
+		}
+	})
+</script>
+</body>
+</html>
